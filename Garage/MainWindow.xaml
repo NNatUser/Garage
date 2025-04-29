@@ -1,0 +1,22 @@
+﻿<Window x:Class="Garage.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Garage"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Гараж" Height="600" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button x:Name="BtnMain" Click="BtnMain_Click" Content="Главная" Style="{StaticResource BtnTwoType}"/>
+            <Button x:Name="BtnTransit" Click="BtnTransit_Click"  Content="Перевозки" Style="{StaticResource BtnTwoType}"/>
+            <Button x:Name="BtnCatalog" Click="BtnCatalog_Click" Content="Каталоги" Style="{StaticResource BtnTwoType}"/>
+        </StackPanel>
+        <Frame x:Name="MainFrame" Grid.Row="1" Margin="5" NavigationUIVisibility="Hidden"/>
+    </Grid>
+</Window>

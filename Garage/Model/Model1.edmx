@@ -1,0 +1,627 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище user17Model" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Car">
+          <Key>
+            <PropertyRef Name="IdCar" />
+          </Key>
+          <Property Name="IdCar" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CarBrand" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LisensePlate" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="FuelTypeId" Type="int" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <EntityType Name="Driver">
+          <Key>
+            <PropertyRef Name="IdDriver" />
+          </Key>
+          <Property Name="IdDriver" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdCar" Type="int" />
+          <Property Name="Firstname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Middlename" Type="nvarchar" MaxLength="50" />
+          <Property Name="Lastname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DrivingLicenseNumber" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <EntityType Name="Fuel">
+          <Key>
+            <PropertyRef Name="IdFuel" />
+          </Key>
+          <Property Name="IdFuel" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FuelType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PricePerLiter" Type="money" />
+        </EntityType>
+        <EntityType Name="GarageRole">
+          <Key>
+            <PropertyRef Name="IdRole" />
+          </Key>
+          <Property Name="IdRole" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NameRole" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "user17.dbo.GarageUser" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="GarageUser">
+          <Key>
+            <PropertyRef Name="IdUser" />
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="Password" />
+          </Key>
+          <Property Name="IdUser" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar(max)" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdRole" Type="int" />
+        </EntityType>
+        <EntityType Name="StatusCar">
+          <Key>
+            <PropertyRef Name="IdStatusCar" />
+          </Key>
+          <Property Name="IdStatusCar" Type="int" Nullable="false" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="StatusDriver">
+          <Key>
+            <PropertyRef Name="IdStatusDriver" />
+          </Key>
+          <Property Name="IdStatusDriver" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatusTransit">
+          <Key>
+            <PropertyRef Name="IdStatusTransit" />
+          </Key>
+          <Property Name="IdStatusTransit" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Transit">
+          <Key>
+            <PropertyRef Name="IdTransit" />
+          </Key>
+          <Property Name="IdTransit" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdCar" Type="int" Nullable="false" />
+          <Property Name="IdDriver" Type="int" Nullable="false" />
+          <Property Name="IdFuel" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <Association Name="FK_Car_Fuel">
+          <End Role="Fuel" Type="Self.Fuel" Multiplicity="0..1" />
+          <End Role="Car" Type="Self.Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fuel">
+              <PropertyRef Name="IdFuel" />
+            </Principal>
+            <Dependent Role="Car">
+              <PropertyRef Name="FuelTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Car_StatusCar">
+          <End Role="StatusCar" Type="Self.StatusCar" Multiplicity="0..1" />
+          <End Role="Car" Type="Self.Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCar">
+              <PropertyRef Name="IdStatusCar" />
+            </Principal>
+            <Dependent Role="Car">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Driver_Car">
+          <End Role="Car" Type="Self.Car" Multiplicity="0..1" />
+          <End Role="Driver" Type="Self.Driver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Car">
+              <PropertyRef Name="IdCar" />
+            </Principal>
+            <Dependent Role="Driver">
+              <PropertyRef Name="IdCar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Driver_StatusDriver">
+          <End Role="StatusDriver" Type="Self.StatusDriver" Multiplicity="0..1" />
+          <End Role="Driver" Type="Self.Driver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusDriver">
+              <PropertyRef Name="IdStatusDriver" />
+            </Principal>
+            <Dependent Role="Driver">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GarageUser_GarageRole">
+          <End Role="GarageRole" Type="Self.GarageRole" Multiplicity="0..1" />
+          <End Role="GarageUser" Type="Self.GarageUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GarageRole">
+              <PropertyRef Name="IdRole" />
+            </Principal>
+            <Dependent Role="GarageUser">
+              <PropertyRef Name="IdRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_Car">
+          <End Role="Car" Type="Self.Car" Multiplicity="1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Car">
+              <PropertyRef Name="IdCar" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="IdCar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_Driver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="IdDriver" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="IdDriver" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_Fuel">
+          <End Role="Fuel" Type="Self.Fuel" Multiplicity="1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fuel">
+              <PropertyRef Name="IdFuel" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="IdFuel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_StatusTransit">
+          <End Role="StatusTransit" Type="Self.StatusTransit" Multiplicity="0..1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusTransit">
+              <PropertyRef Name="IdStatusTransit" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище user17ModelContainer">
+          <EntitySet Name="Car" EntityType="Self.Car" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Driver" EntityType="Self.Driver" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fuel" EntityType="Self.Fuel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GarageRole" EntityType="Self.GarageRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusCar" EntityType="Self.StatusCar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusDriver" EntityType="Self.StatusDriver" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusTransit" EntityType="Self.StatusTransit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transit" EntityType="Self.Transit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GarageUser" EntityType="Self.GarageUser" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GarageUser].[IdUser] AS [IdUser], 
+    [GarageUser].[Name] AS [Name], 
+    [GarageUser].[Login] AS [Login], 
+    [GarageUser].[Password] AS [Password], 
+    [GarageUser].[IdRole] AS [IdRole]
+    FROM [dbo].[GarageUser] AS [GarageUser]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Car_Fuel" Association="Self.FK_Car_Fuel">
+            <End Role="Fuel" EntitySet="Fuel" />
+            <End Role="Car" EntitySet="Car" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Car_StatusCar" Association="Self.FK_Car_StatusCar">
+            <End Role="StatusCar" EntitySet="StatusCar" />
+            <End Role="Car" EntitySet="Car" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Driver_Car" Association="Self.FK_Driver_Car">
+            <End Role="Car" EntitySet="Car" />
+            <End Role="Driver" EntitySet="Driver" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Driver_StatusDriver" Association="Self.FK_Driver_StatusDriver">
+            <End Role="StatusDriver" EntitySet="StatusDriver" />
+            <End Role="Driver" EntitySet="Driver" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GarageUser_GarageRole" Association="Self.FK_GarageUser_GarageRole">
+            <End Role="GarageRole" EntitySet="GarageRole" />
+            <End Role="GarageUser" EntitySet="GarageUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_Car" Association="Self.FK_Transit_Car">
+            <End Role="Car" EntitySet="Car" />
+            <End Role="Transit" EntitySet="Transit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_Driver" Association="Self.FK_Transit_Driver">
+            <End Role="Driver" EntitySet="Driver" />
+            <End Role="Transit" EntitySet="Transit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_Fuel" Association="Self.FK_Transit_Fuel">
+            <End Role="Fuel" EntitySet="Fuel" />
+            <End Role="Transit" EntitySet="Transit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_StatusTransit" Association="Self.FK_Transit_StatusTransit">
+            <End Role="StatusTransit" EntitySet="StatusTransit" />
+            <End Role="Transit" EntitySet="Transit" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="user17Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Car">
+          <Key>
+            <PropertyRef Name="IdCar" />
+          </Key>
+          <Property Name="IdCar" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CarBrand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LisensePlate" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FuelTypeId" Type="Int32" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Fuel" Relationship="Self.FK_Car_Fuel" FromRole="Car" ToRole="Fuel" />
+          <NavigationProperty Name="StatusCar" Relationship="Self.FK_Car_StatusCar" FromRole="Car" ToRole="StatusCar" />
+          <NavigationProperty Name="Drivers" Relationship="Self.FK_Driver_Car" FromRole="Car" ToRole="Driver" />
+          <NavigationProperty Name="Transits" Relationship="Self.FK_Transit_Car" FromRole="Car" ToRole="Transit" />
+        </EntityType>
+        <EntityType Name="Driver">
+          <Key>
+            <PropertyRef Name="IdDriver" />
+          </Key>
+          <Property Name="IdDriver" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCar" Type="Int32" />
+          <Property Name="Firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Middlename" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DrivingLicenseNumber" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Car" Relationship="Self.FK_Driver_Car" FromRole="Driver" ToRole="Car" />
+          <NavigationProperty Name="StatusDriver" Relationship="Self.FK_Driver_StatusDriver" FromRole="Driver" ToRole="StatusDriver" />
+          <NavigationProperty Name="Transits" Relationship="Self.FK_Transit_Driver" FromRole="Driver" ToRole="Transit" />
+        </EntityType>
+        <EntityType Name="Fuel">
+          <Key>
+            <PropertyRef Name="IdFuel" />
+          </Key>
+          <Property Name="IdFuel" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FuelType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PricePerLiter" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="Cars" Relationship="Self.FK_Car_Fuel" FromRole="Fuel" ToRole="Car" />
+          <NavigationProperty Name="Transits" Relationship="Self.FK_Transit_Fuel" FromRole="Fuel" ToRole="Transit" />
+        </EntityType>
+        <EntityType Name="GarageRole">
+          <Key>
+            <PropertyRef Name="IdRole" />
+          </Key>
+          <Property Name="IdRole" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NameRole" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="GarageUsers" Relationship="Self.FK_GarageUser_GarageRole" FromRole="GarageRole" ToRole="GarageUser" />
+        </EntityType>
+        <EntityType Name="StatusCar">
+          <Key>
+            <PropertyRef Name="IdStatusCar" />
+          </Key>
+          <Property Name="IdStatusCar" Type="Int32" Nullable="false" />
+          <Property Name="StatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Cars" Relationship="Self.FK_Car_StatusCar" FromRole="StatusCar" ToRole="Car" />
+        </EntityType>
+        <EntityType Name="StatusDriver">
+          <Key>
+            <PropertyRef Name="IdStatusDriver" />
+          </Key>
+          <Property Name="IdStatusDriver" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Drivers" Relationship="Self.FK_Driver_StatusDriver" FromRole="StatusDriver" ToRole="Driver" />
+        </EntityType>
+        <EntityType Name="StatusTransit">
+          <Key>
+            <PropertyRef Name="IdStatusTransit" />
+          </Key>
+          <Property Name="IdStatusTransit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Transits" Relationship="Self.FK_Transit_StatusTransit" FromRole="StatusTransit" ToRole="Transit" />
+        </EntityType>
+        <EntityType Name="Transit">
+          <Key>
+            <PropertyRef Name="IdTransit" />
+          </Key>
+          <Property Name="IdTransit" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCar" Type="Int32" Nullable="false" />
+          <Property Name="IdDriver" Type="Int32" Nullable="false" />
+          <Property Name="IdFuel" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="Car" Relationship="Self.FK_Transit_Car" FromRole="Transit" ToRole="Car" />
+          <NavigationProperty Name="Driver" Relationship="Self.FK_Transit_Driver" FromRole="Transit" ToRole="Driver" />
+          <NavigationProperty Name="Fuel" Relationship="Self.FK_Transit_Fuel" FromRole="Transit" ToRole="Fuel" />
+          <NavigationProperty Name="StatusTransit" Relationship="Self.FK_Transit_StatusTransit" FromRole="Transit" ToRole="StatusTransit" />
+        </EntityType>
+        <EntityType Name="GarageUser">
+          <Key>
+            <PropertyRef Name="IdUser" />
+            <PropertyRef Name="Login" />
+            <PropertyRef Name="Password" />
+          </Key>
+          <Property Name="IdUser" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IdRole" Type="Int32" />
+          <NavigationProperty Name="GarageRole" Relationship="Self.FK_GarageUser_GarageRole" FromRole="GarageUser" ToRole="GarageRole" />
+        </EntityType>
+        <Association Name="FK_Car_Fuel">
+          <End Role="Fuel" Type="Self.Fuel" Multiplicity="0..1" />
+          <End Role="Car" Type="Self.Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fuel">
+              <PropertyRef Name="IdFuel" />
+            </Principal>
+            <Dependent Role="Car">
+              <PropertyRef Name="FuelTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Car_StatusCar">
+          <End Role="StatusCar" Type="Self.StatusCar" Multiplicity="0..1" />
+          <End Role="Car" Type="Self.Car" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCar">
+              <PropertyRef Name="IdStatusCar" />
+            </Principal>
+            <Dependent Role="Car">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Driver_Car">
+          <End Role="Car" Type="Self.Car" Multiplicity="0..1" />
+          <End Role="Driver" Type="Self.Driver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Car">
+              <PropertyRef Name="IdCar" />
+            </Principal>
+            <Dependent Role="Driver">
+              <PropertyRef Name="IdCar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_Car">
+          <End Role="Car" Type="Self.Car" Multiplicity="1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Car">
+              <PropertyRef Name="IdCar" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="IdCar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Driver_StatusDriver">
+          <End Role="StatusDriver" Type="Self.StatusDriver" Multiplicity="0..1" />
+          <End Role="Driver" Type="Self.Driver" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusDriver">
+              <PropertyRef Name="IdStatusDriver" />
+            </Principal>
+            <Dependent Role="Driver">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_Driver">
+          <End Role="Driver" Type="Self.Driver" Multiplicity="1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Driver">
+              <PropertyRef Name="IdDriver" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="IdDriver" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_Fuel">
+          <End Role="Fuel" Type="Self.Fuel" Multiplicity="1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Fuel">
+              <PropertyRef Name="IdFuel" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="IdFuel" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GarageUser_GarageRole">
+          <End Role="GarageRole" Type="Self.GarageRole" Multiplicity="0..1" />
+          <End Role="GarageUser" Type="Self.GarageUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GarageRole">
+              <PropertyRef Name="IdRole" />
+            </Principal>
+            <Dependent Role="GarageUser">
+              <PropertyRef Name="IdRole" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transit_StatusTransit">
+          <End Role="StatusTransit" Type="Self.StatusTransit" Multiplicity="0..1" />
+          <End Role="Transit" Type="Self.Transit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusTransit">
+              <PropertyRef Name="IdStatusTransit" />
+            </Principal>
+            <Dependent Role="Transit">
+              <PropertyRef Name="Status" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="user17Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Cars" EntityType="Self.Car" />
+          <EntitySet Name="Drivers" EntityType="Self.Driver" />
+          <EntitySet Name="Fuels" EntityType="Self.Fuel" />
+          <EntitySet Name="GarageRoles" EntityType="Self.GarageRole" />
+          <EntitySet Name="StatusCars" EntityType="Self.StatusCar" />
+          <EntitySet Name="StatusDrivers" EntityType="Self.StatusDriver" />
+          <EntitySet Name="StatusTransits" EntityType="Self.StatusTransit" />
+          <EntitySet Name="Transits" EntityType="Self.Transit" />
+          <EntitySet Name="GarageUsers" EntityType="Self.GarageUser" />
+          <AssociationSet Name="FK_Car_Fuel" Association="Self.FK_Car_Fuel">
+            <End Role="Fuel" EntitySet="Fuels" />
+            <End Role="Car" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Car_StatusCar" Association="Self.FK_Car_StatusCar">
+            <End Role="StatusCar" EntitySet="StatusCars" />
+            <End Role="Car" EntitySet="Cars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Driver_Car" Association="Self.FK_Driver_Car">
+            <End Role="Car" EntitySet="Cars" />
+            <End Role="Driver" EntitySet="Drivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_Car" Association="Self.FK_Transit_Car">
+            <End Role="Car" EntitySet="Cars" />
+            <End Role="Transit" EntitySet="Transits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Driver_StatusDriver" Association="Self.FK_Driver_StatusDriver">
+            <End Role="StatusDriver" EntitySet="StatusDrivers" />
+            <End Role="Driver" EntitySet="Drivers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_Driver" Association="Self.FK_Transit_Driver">
+            <End Role="Driver" EntitySet="Drivers" />
+            <End Role="Transit" EntitySet="Transits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_Fuel" Association="Self.FK_Transit_Fuel">
+            <End Role="Fuel" EntitySet="Fuels" />
+            <End Role="Transit" EntitySet="Transits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GarageUser_GarageRole" Association="Self.FK_GarageUser_GarageRole">
+            <End Role="GarageRole" EntitySet="GarageRoles" />
+            <End Role="GarageUser" EntitySet="GarageUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transit_StatusTransit" Association="Self.FK_Transit_StatusTransit">
+            <End Role="StatusTransit" EntitySet="StatusTransits" />
+            <End Role="Transit" EntitySet="Transits" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище user17ModelContainer" CdmEntityContainer="user17Entities">
+          <EntitySetMapping Name="Cars">
+            <EntityTypeMapping TypeName="user17Model.Car">
+              <MappingFragment StoreEntitySet="Car">
+                <ScalarProperty Name="IdCar" ColumnName="IdCar" />
+                <ScalarProperty Name="CarBrand" ColumnName="CarBrand" />
+                <ScalarProperty Name="LisensePlate" ColumnName="LisensePlate" />
+                <ScalarProperty Name="FuelTypeId" ColumnName="FuelTypeId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Drivers">
+            <EntityTypeMapping TypeName="user17Model.Driver">
+              <MappingFragment StoreEntitySet="Driver">
+                <ScalarProperty Name="IdDriver" ColumnName="IdDriver" />
+                <ScalarProperty Name="IdCar" ColumnName="IdCar" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Middlename" ColumnName="Middlename" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="DrivingLicenseNumber" ColumnName="DrivingLicenseNumber" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fuels">
+            <EntityTypeMapping TypeName="user17Model.Fuel">
+              <MappingFragment StoreEntitySet="Fuel">
+                <ScalarProperty Name="IdFuel" ColumnName="IdFuel" />
+                <ScalarProperty Name="FuelType" ColumnName="FuelType" />
+                <ScalarProperty Name="PricePerLiter" ColumnName="PricePerLiter" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GarageRoles">
+            <EntityTypeMapping TypeName="user17Model.GarageRole">
+              <MappingFragment StoreEntitySet="GarageRole">
+                <ScalarProperty Name="IdRole" ColumnName="IdRole" />
+                <ScalarProperty Name="NameRole" ColumnName="NameRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusCars">
+            <EntityTypeMapping TypeName="user17Model.StatusCar">
+              <MappingFragment StoreEntitySet="StatusCar">
+                <ScalarProperty Name="IdStatusCar" ColumnName="IdStatusCar" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusDrivers">
+            <EntityTypeMapping TypeName="user17Model.StatusDriver">
+              <MappingFragment StoreEntitySet="StatusDriver">
+                <ScalarProperty Name="IdStatusDriver" ColumnName="IdStatusDriver" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusTransits">
+            <EntityTypeMapping TypeName="user17Model.StatusTransit">
+              <MappingFragment StoreEntitySet="StatusTransit">
+                <ScalarProperty Name="IdStatusTransit" ColumnName="IdStatusTransit" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transits">
+            <EntityTypeMapping TypeName="user17Model.Transit">
+              <MappingFragment StoreEntitySet="Transit">
+                <ScalarProperty Name="IdTransit" ColumnName="IdTransit" />
+                <ScalarProperty Name="IdCar" ColumnName="IdCar" />
+                <ScalarProperty Name="IdDriver" ColumnName="IdDriver" />
+                <ScalarProperty Name="IdFuel" ColumnName="IdFuel" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GarageUsers">
+            <EntityTypeMapping TypeName="user17Model.GarageUser">
+              <MappingFragment StoreEntitySet="GarageUser">
+                <ScalarProperty Name="IdUser" ColumnName="IdUser" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="IdRole" ColumnName="IdRole" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
